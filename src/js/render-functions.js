@@ -6,75 +6,65 @@ import 'izitoast/dist/css/iziToast.min.css';
 const gallery = document.getElementById('gallery');
 
 export function renderImages(images) {
-    gallery.innerHTML = '';
+    let markup = '';
+
+    markup = images
+        .map(({ largeImageURL, webformatURL, tags, likes, views, comments, downloads, }) => {
+            return `<li class="card">
+        <a href="${largeImageURL}">
+          <img src="${webformatURL}" alt="${tags}">
+        </a>
+        <ul class="info-list">
+            <li>
+                <p class="info-title">Likes</p>
+                <p class="info-data">${likes}</p>
+            </li>
+            <li>
+                <p class="info-title">Views</p>
+                <p class="info-data">${views}</p>
+            </li>
+            <li>
+                <p class="info-title">Comments</p>
+                <p class="info-data">${comments}</p>
+            </li>
+            <li>
+                <p class="info-title">Downloads</p>
+                <p class="info-data">${downloads}</p>
+            </li>
+          </ul>
+      </li>`;
+        }
+        )
+        .join('');
+
+    gallery.insertAdjacentHTML('beforeend', markup);
 
     const lightbox = new SimpleLightbox('.gallery a', {
         captionsData: 'alt',
         captionDelay: 250,
     });
 
-    images.forEach(image => {
-        const card = document.createElement('li');
-        card.classList.add('card');
-
-        const link = document.createElement('a');
-        link.setAttribute('href', image.largeImageURL);
-
-        const img = document.createElement('img');
-        img.setAttribute('src', image.webformatURL);
-        img.setAttribute('alt', image.tags);
-
-        const infoListHTML = `
-      <ul class="info-list">
-        <li>
-            <p class="info-title">Likes</p>
-            <p class="info-data">${image.likes}</p>
-        </li>
-        <li>
-            <p class="info-title">Views</p>
-            <p class="info-data">${image.views}</p>
-        </li>
-        <li>
-            <p class="info-title">Comments</p>
-            <p class="info-data">${image.comments}</p>
-        </li>
-        <li>
-            <p class="info-title">Downloads</p>
-            <p class="info-data">${image.downloads}</p>
-        </li>
-      </ul>
-    `;
-
-        link.appendChild(img);
-        card.appendChild(link);
-        card.insertAdjacentHTML('beforeend', infoListHTML);
-        gallery.appendChild(card);
-    });
-
     lightbox.refresh();
 }
 
-export function show_Load_Ind() {
-    hide_Load_Ind();
-    const loading = document.createElement('span');
-    loading.classList.add('loader');
-    gallery.append(loading);
-}
-
-export function hide_Load_Ind() {
-    gallery.innerHTML = '';
-}
-
-export function show_Err_Mess(message) {
+export function showErrorMessage(message) {
     iziToast.error({
         message: message,
         position: 'bottomCenter',
     });
 }
 
-export function show_Warn_Mess(message) {
+export function showWarningMessage(message) {
     iziToast.warning({
         message: message,
         position: 'bottomCenter',
     });
 }
+
+export function showInfoMessage(message) {
+    iziToast.info({
+        message: message,
+        position: 'bottomCenter',
+    });
+}
+
