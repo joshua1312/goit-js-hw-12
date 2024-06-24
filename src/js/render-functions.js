@@ -54,25 +54,25 @@ export function renderImages(images) {
     lightbox.refresh();
 }
 
-export function showLoadingIndicator() {
-    hideLoadingIndicator();
+export function show_Load_Ind() {
+    hide_Load_Ind();
     const loading = document.createElement('span');
     loading.classList.add('loader');
     gallery.append(loading);
 }
 
-export function hideLoadingIndicator() {
+export function hide_Load_Ind() {
     gallery.innerHTML = '';
 }
 
-export function showErrorMessage(message) {
+export function show_Err_Mess(message) {
     iziToast.error({
         message: message,
         position: 'bottomCenter',
     });
 }
 
-export function showWarningMessage(message) {
+export function show_Warn_Mess(message) {
     iziToast.warning({
         message: message,
         position: 'bottomCenter',
