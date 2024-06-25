@@ -1,3 +1,5 @@
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 import { fetchImages } from './js/pixabay-api.js';
 import {
     renderImages,
@@ -14,6 +16,13 @@ const pendingIcon = document.getElementById('pending-icon');
 let currentPage = 1;
 let currentQuery = '';
 
+const lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+});
+
+
+
 searchForm.addEventListener('submit', async event => {
     event.preventDefault();
 
@@ -27,6 +36,7 @@ searchForm.addEventListener('submit', async event => {
     currentQuery = query;
     currentPage = 1;
 
+
     try {
         pendingIcon.style.display = 'block';
 
@@ -39,6 +49,8 @@ searchForm.addEventListener('submit', async event => {
         } else {
             gallery.innerHTML = '';
             renderImages(data.hits);
+            lightbox.refresh();
+            currentPage++;
             if (data.totalHits > currentPage * 15) {
                 loadMoreBtn.style.display = 'block';
             } else {
@@ -47,21 +59,23 @@ searchForm.addEventListener('submit', async event => {
         }
     } catch (error) {
         showErrorMessage('Failed to fetch images. Please try again later.');
-    } finally {
+    }
+    finally {
         pendingIcon.style.display = 'none';
     }
 });
 
 loadMoreBtn.addEventListener('click', async () => {
-    currentPage++;
 
-    pendingIcon.style.display = 'block';
+    // pendingIcon.style.display = 'block';
 
     try {
         const data = await fetchImages(currentQuery, currentPage);
         pendingIcon.style.display = 'none';
         if (data.hits.length > 0) {
             renderImages(data.hits);
+            lightbox.refresh();
+            currentPage++;
             if (data.totalHits > currentPage * 15) {
                 loadMoreBtn.style.display = 'block';
             } else {
